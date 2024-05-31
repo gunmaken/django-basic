@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row justyfi-content-center">
+        <div class="col-md-6">
+            <h2>Update Todo</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="{{ form.title.id_for_label }}">title</label>
+                    <input type="text" class="form-control {% if form.title.errors %}is-invalid{% endif %} border-secondary" name="{{ form.title.html_name }}" id="{{ form.title.id_for_label }}" required>
+                    {% for error in form.title.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="form-group mb-3">
+                    <label for="{{ form.description.id_for_label }}">description</label>
+                    <textarea class="form-control {% if form.description.errors %}is-invalid{% endif %} border-secondary" name="{{ form.description.html_name }}" id="{{ form.description.id_for_label }}" required></textarea>
+                    {% for error in form.description.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="form-group mb-3">
+                    <label for="{{ form.deadline.id_for_label }}">deadline</label>
+                    <input type="datetime-local" class="form-control {% if form.deadline.errors %}is-invalid{% endif %} border-secondary" name="{{ form.deadline.html_name }}" id="{{ form.deadline.id_for_label }}" required>
+                    {% for error in form.deadline.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="form-group mb-3">
+                    <label for="{{ form.is_public.id_for_label }}">Todoを公開する</label>
+                    <input type="checkbox" class="form-check {% if form.is_public.errors %}is-invalid{% endif %}" name="{{ form.is_public.html_name }}" id="{{ form.is_public.id_for_label }}">
+                    {% for error in form.is_public.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary mb-3">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

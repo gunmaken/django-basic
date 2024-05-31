@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="table-responsive m-5">
+  <table class="table table-striped align-middle table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">title</th>
+          <th scope="col">description</th>
+          <th scope="col">created_at</th>
+          {% if request.user.username == endpoint_username %}
+          <th scope="col">options</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+          {% for object in object_list %}
+          <tr>
+              <td>{{ object.title }}</td>
+              <td>{{ object.description }}</td>
+              <td>{{ object.created_at }}</td>
+              {% if request.user.username == endpoint_username %}
+              <td>
+                <a href="{% url 'accounts:update_todo' pk=object.id %}">変更</a><br>
+                <a href="{% url 'accounts:delete_todo' pk=object.id %}">削除</a>
+              </td>
+            </tr>
+            {% endif %}
+          {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endblock %}

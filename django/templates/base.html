@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title></title>
+<link rel="stylesheet" type="text/css" href="{% static 'base.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">Django</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              {% if request.user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link active" href="/{{ user.username }}">Home</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'accounts:hello' %}">Home</a>
+              </li>
+              {% endif %}
+
+              {% if request.user.is_authenticated %}
+              
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'accounts:signin' %}">Log in</a>
+              </li>
+              {% endif %}
+
+              {% if request.user.is_authenticated %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Todo
+                </a>
+                <ul class="dropdown-menu">
+                  {% if request.user.username == endpoint_username %}
+                  <li><a class="dropdown-item" href="{% url 'accounts:create_todo' %}">Add Todo</a></li>
+                  <li><a class="dropdown-item" href="{% url 'accounts:todoslist' username=request.user.username %}">List My Todos</a></li>
+
+                  {% elif endpoint_username %}
+                  <li><a class="dropdown-item" href="{% url 'accounts:todoslist' username=endpoint_username %}">List This User Todos</a></li>
+                  <li><a class="dropdown-item" href="{% url 'accounts:todoslist' username=request.user.username %}">List My Todos</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  {% else %}
+                  <li><a class="dropdown-item" href="{% url 'accounts:todoslist' username=request.user.username %}">List My Todos</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  {% endif %}
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ request.user.username }}
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item">{{ request.user.username }}でログイン中</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{% url 'accounts:update_user' pk=request.user.id %}">Config</a></li>
+                  <li><a class="dropdown-item" href="{% url 'accounts:signout' %}">Log out</a></li>
+                </ul>
+              </li>
+              {% endif %}
+            </ul>
+            <form class="d-flex" role="search" method="get" action="{% url 'accounts:user_search' %}" >
+              <input class="form-control me-2" id="search_word" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <script>
+              $(function() {
+                  $("#search_word").autocomplete({
+                      source: function(request, response) {
+                          $.getJSON("/user_autocomplete/", {
+                              term: request.term
+                          }, function(data) {
+                              response($.map(data, function(item) {
+                                  return {
+                                      label: item.username,
+                                      value: item.username
+                                  };
+                              }));
+                          });
+                      },
+                      select: function(event, ui) {
+                          window.location.href = "/" + ui.item.value;
+                      }
+                  });
+              });
+              </script>
+          </div>
+        </div>
+      </nav>
+    <h1>Hello</h1>
+    {% block content %}
+    {% endblock %}
+</body>
+
+</html>

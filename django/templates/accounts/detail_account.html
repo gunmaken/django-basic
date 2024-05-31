@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>社員詳細ページ</h1>
+    <p>ユーザ名:{{ object.username }}</p>
+    <p>メールアドレス:{{ object.email }}</p>
+    <p>アカウント作成日：{{ object.created_at|date:'Y/m/d' }}</p>
+
+
+{% endblock %}
