@@ -11,6 +11,8 @@ services:
       - ./.env
     networks:
       - mynet
+    depends_on:
+      - db
     ports:
       - "80:8000"
 
@@ -35,6 +37,6 @@ services:
 
 networks:
   mynet:
-    driver: brigde
+    driver: bridge
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
